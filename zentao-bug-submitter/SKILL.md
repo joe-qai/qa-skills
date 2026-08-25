@@ -10,8 +10,8 @@ description: "自动在禅道（ZenTao）系统提交 Bug。当用户提供测�
 
 ## 预设连接信息
 
-- **禅道地址**: `https://pm.dding.net/zentao`
-- **账号**: `xuping`
+- **禅道地址**: `https://pm.xxxxx.net/zentao`
+- **账号**: `xxxxx`
 - **密码**: 由用户提供或通过环境变量 `ZENTAO_PASSWORD` 传入
 - **SSL**: 内网可能为自签名证书，如遇证书错误加 `--no-verify`
 
@@ -54,7 +54,7 @@ description: "自动在禅道（ZenTao）系统提交 Bug。当用户提供测�
 
 ```bash
 # 2a. 获取产品列表（让用户选择，或根据关键词匹配）
-python scripts/zentao_client.py products --url https://pm.dding.net/zentao --account xuping --password '<密码>'
+python scripts/zentao_client.py products --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
 
 # 2b. 根据选定产品获取模块列表
 python scripts/zentao_client.py modules --product-id <产品ID> --url ... --account ... --password ...
@@ -109,17 +109,17 @@ python scripts/zentao_client.py create-bug \
   --product-id <产品ID> --title "Bug 标题" --severity 3 --pri 3 \
   --opened-build <版本ID> --steps "..." \
   --files /path/to/screenshot.png /path/to/run.log \
-  --url https://pm.dding.net/zentao --account xuping --password '<密码>'
+  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
 
 # 方式二：仅上传附件（纯 REST /files）
 python scripts/zentao_client.py upload \
   --file /path/to/screenshot.png --uid bug-upload-<timestamp> \
-  --url https://pm.dding.net/zentao --account xuping --password '<密码>'
+  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
 
 # 方式三：批量上传（多附件，同一 uid 关联）
 python scripts/zentao_client.py upload-files \
   --files /path/a.png /path/run.log --uid bug-upload-<timestamp> \
-  --url https://pm.dding.net/zentao --account xuping --password '<密码>'
+  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
 ```
 
 多个文件使用**同一个 uid** 依次上传。
@@ -147,7 +147,7 @@ python scripts/zentao_client.py create-bug \
   --uid <附件关联uid> \
   --os "操作系统" \
   --browser "浏览器" \
-  --url https://pm.dding.net/zentao --account xuping --password '<密码>'
+  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
 ```
 
 ### Step 6: 返回结果
@@ -155,7 +155,7 @@ python scripts/zentao_client.py create-bug \
 创建成功后，向用户报告：
 - Bug 编号（返回的 `id`）
 - Bug 标题
-- Bug 链接: `https://pm.dding.net/zentao/bug-view-<id>.html`
+- Bug 链接: `https://pm.xxxxx.net/zentao/bug-view-<id>.html`
 - 附件关联情况：若 `_attachments` 中有 `ok=false` 的文件，说明该实例服务端限制自动上传，需通过 Web 界面手动关联，并附上本地文件路径
 
 ## 作为 Python 模块使用
@@ -168,8 +168,8 @@ sys.path.insert(0, '/path/to/zentao-bug-submitter/scripts')
 from zentao_client import ZentaoClient
 
 client = ZentaoClient(
-    base_url='https://pm.dding.net/zentao',
-    account='xuping',
+    base_url='https://pm.xxxxx.net/zentao',
+    account='xxxxx',
     password='<密码>',
     verify_ssl=False,  # 内网自签名证书
 )

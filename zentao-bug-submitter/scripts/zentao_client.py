@@ -7,7 +7,7 @@
 
 用法示例（CLI）：
   # 登录并获取 token
-  python3 zentao_client.py login --url https://pm.dding.net/zentao --account xuping --password 'xxx'
+  python3 zentao_client.py login --url https://pm.xxxxx.net/zentao --account xxxxx --password 'xxx'
 
   # 获取产品列表
   python3 zentao_client.py products --url ... --account ... --password ...
@@ -63,7 +63,7 @@ class ZentaoClient:
 
     def __init__(self, base_url, account, password, verify_ssl=True, debug=False):
         """
-        base_url: 禅道根地址，如 https://pm.dding.net/zentao
+        base_url: 禅道根地址，如 https://pm.xxxxx.net/zentao
         account/password: 登录账号密码
         verify_ssl: 是否校验 SSL 证书（内网自签名证书可设 False）
         debug: 开启后打印请求和响应详情，便于排查
@@ -582,7 +582,7 @@ def cmd_create_bug(args):
 def main():
     parser = argparse.ArgumentParser(description='禅道 REST API v1 客户端')
     parser.add_argument('--url', default=os.environ.get('ZENTAO_URL', ''),
-                        help='禅道根地址，如 https://pm.dding.net/zentao')
+                        help='禅道根地址，如 https://pm.xxxxx.net/zentao')
     parser.add_argument('--account', default=os.environ.get('ZENTAO_ACCOUNT', ''),
                         help='登录账号')
     parser.add_argument('--password', default=os.environ.get('ZENTAO_PASSWORD', ''),

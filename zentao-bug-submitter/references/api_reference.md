@@ -23,7 +23,7 @@ POST /tokens
 Content-Type: application/json
 
 {
-  "account": "xuping",
+  "account": "xxxxx",
   "password": "xxxxxxxx"
 }
 ```
@@ -54,7 +54,7 @@ GET /products?limit=100
 ```json
 {
   "products": [
-    { "id": "1", "name": "鹿客智能锁", "code": "lock", "status": "normal" }
+    { "id": "1", "name": "xx智能锁", "code": "lock", "status": "normal" }
   ],
   "page": 1, "total": 10
 }
@@ -87,7 +87,7 @@ GET /builds?project=<project_id>&limit=100
 
 > **注意**：部分禅道实例需要通过 `project` 参数查询，而非 `type=product&param=<product_id>`。
 > 可从产品详情中获取对应的 project id（如 X-Men 产品对应 project=182）。
-> **部分账号**（如 xuping）查询 builds 会返回 403（无项目浏览权限），此时请直接使用版本号字符串创建 Bug。
+> **部分账号**（如 xxxxx）查询 builds 会返回 403（无项目浏览权限），此时请直接使用版本号字符串创建 Bug。
 
 **响应关键字段：**
 ```json
