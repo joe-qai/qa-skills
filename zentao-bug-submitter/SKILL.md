@@ -1,19 +1,30 @@
----
-name: zentao-bug-submitter
-description: "自动在禅道（ZenTao）系统提交 Bug。当用户提供测试用例描述、重现步骤、预期结果、实际结果、截图/视频/日志等附件，并要求提交 Bug、提缺陷、报 bug、创建 bug、提交到禅道时使用。支持动态选择所属产品、模块、影响版本、指派人，自动上传附件并关联。基于禅道 REST API v1，兼容企业版/旗舰版/开源版。"
----
-
 # 禅道 Bug 自动提交
 
 通过禅道 REST API v1 自动提交 Bug，支持账号密码登录、动态获取产品/模块/版本/用户选项。
 **注意**：附件上传接口（`POST /api.php/v1/files`）在某些禅道实例中存在服务端问题，如遇到上传失败请记录 uid 并通过禅道 Web 界面手动关联。
 
-## 预设连接信息
+## 连接信息（环境变量）
 
-- **禅道地址**: `https://pm.xxxxx.net/zentao`
-- **账号**: `xxxxx`
-- **密码**: 由用户提供或通过环境变量 `ZENTAO_PASSWORD` 传入
-- **SSL**: 内网可能为自签名证书，如遇证书错误加 `--no-verify`
+所有连接信息**必须从环境变量获取，禁止在文档、回复或代码中硬编码真实地址、账号、密码**：
+
+| 环境变量 | 说明 |
+|----------|------|
+| `ZENTAO_URL` | 禅道根地址（如 `https://<host>/zentao`） |
+| `ZENTAO_ACCOUNT` | 登录账号 |
+| `ZENTAO_PASSWORD` | 登录密码 |
+| `ZENTAO_VERIFY_SSL` | 可选，设为 `0` 表示不校验 SSL 证书（内网自签名证书场景） |
+
+**使用流程：**
+1. 执行任何命令前，先检查上述环境变量是否已设置（如 `$env:ZENTAO_URL`）
+2. 若已设置：直接引用环境变量，不在输出中回显明文值
+3. 若未设置：**提醒用户提供连接信息**，并建议其设置环境变量，例如：
+   ```powershell
+   $env:ZENTAO_URL = "https://<host>/zentao"
+   $env:ZENTAO_ACCOUNT = "<账号>"
+   $env:ZENTAO_PASSWORD = "<密码>"
+   ```
+4. 用户在对话中直接提供密码时，可通过命令行参数传入，但**不得在最终回复中明文展示密码**
+5. SSL：内网可能为自签名证书，如遇证书错误加 `--no-verify`
 
 > 脚本路径: `scripts/zentao_client.py`
 > 详细 API 字段和枚举值: 见 [references/api_reference.md](references/api_reference.md)
@@ -21,6 +32,14 @@ description: "自动在禅道（ZenTao）系统提交 Bug。当用户提供测�
 ## 工作流
 
 收到提交 Bug 的请求后，按以下步骤执行：
+
+### Step 0: 检查连接信息
+
+检查 `ZENTAO_URL` / `ZENTAO_ACCOUNT` / `ZENTAO_PASSWORD` 环境变量是否齐全：
+- 齐全 → 继续后续步骤
+- 缺失 → 停止执行，向用户说明需要哪些环境变量及如何设置，等待用户配置或直接提供后再继续
+
+后续命令示例中统一用 `$env:ZENTAO_URL` 等形式表示，实际执行时由 shell 从环境变量展开。
 
 ### Step 1: 提取 Bug 信息
 
@@ -50,17 +69,17 @@ description: "自动在禅道（ZenTao）系统提交 Bug。当用户提供测�
 
 **所属产品为必填字段**。若用户未明确指定产品，必须先向用户询问并确认产品后再继续。
 
-所属模块、影响版本、当前指派这四个字段需要动态获取。按顺序调用：
+所属模块、影响版本、当前指派这三个字段需要动态获取。按顺序调用：
 
 ```bash
 # 2a. 获取产品列表（让用户选择，或根据关键词匹配）
-python scripts/zentao_client.py products --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
+python scripts/zentao_client.py products --url "$env:ZENTAO_URL" --account "$env:ZENTAO_ACCOUNT" --password "$env:ZENTAO_PASSWORD"
 
 # 2b. 根据选定产品获取模块列表
 python scripts/zentao_client.py modules --product-id <产品ID> --url ... --account ... --password ...
 
-# 2c. 获取版本列表（注意：此禅道实例需要通过 project-id 查询）
-# 先从产品详情中获取 project id（如 X-Men 产品对应 project=182）
+# 2c. 获取版本列表（注意：部分禅道实例需要通过 project-id 查询）
+# 先从产品详情中获取对应的 project id
 python scripts/zentao_client.py builds --project-id <项目ID> --url ... --account ... --password ...
 
 # 若 builds 查询返回 403（账号无项目浏览权限），可直接让用户提供版本号字符串（如 "601_28"、"APP_601_28"）
@@ -68,6 +87,8 @@ python scripts/zentao_client.py builds --project-id <项目ID> --url ... --accou
 # 2d. 获取用户列表（部分实例可能无权限，忽略即可）
 python scripts/zentao_client.py users --url ... --account ... --password ...
 ```
+
+> 提示：脚本本身也支持纯环境变量方式——不传 `--url/--account/--password` 时自动读取 `ZENTAO_URL/ZENTAO_ACCOUNT/ZENTAO_PASSWORD`，命令可简写为 `python scripts/zentao_client.py products`。
 
 **选择策略：**
 - 如果用户明确指定了产品/模块/版本/指派人名称，从返回列表中模糊匹配对应 ID
@@ -109,17 +130,17 @@ python scripts/zentao_client.py create-bug \
   --product-id <产品ID> --title "Bug 标题" --severity 3 --pri 3 \
   --opened-build <版本ID> --steps "..." \
   --files /path/to/screenshot.png /path/to/run.log \
-  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
+  --url "$env:ZENTAO_URL" --account "$env:ZENTAO_ACCOUNT" --password "$env:ZENTAO_PASSWORD"
 
 # 方式二：仅上传附件（纯 REST /files）
 python scripts/zentao_client.py upload \
   --file /path/to/screenshot.png --uid bug-upload-<timestamp> \
-  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
+  --url ... --account ... --password ...
 
 # 方式三：批量上传（多附件，同一 uid 关联）
 python scripts/zentao_client.py upload-files \
   --files /path/a.png /path/run.log --uid bug-upload-<timestamp> \
-  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
+  --url ... --account ... --password ...
 ```
 
 多个文件使用**同一个 uid** 依次上传。
@@ -147,7 +168,7 @@ python scripts/zentao_client.py create-bug \
   --uid <附件关联uid> \
   --os "操作系统" \
   --browser "浏览器" \
-  --url https://pm.xxxxx.net/zentao --account xxxxx --password '<密码>'
+  --url "$env:ZENTAO_URL" --account "$env:ZENTAO_ACCOUNT" --password "$env:ZENTAO_PASSWORD"
 ```
 
 ### Step 6: 返回结果
@@ -155,23 +176,20 @@ python scripts/zentao_client.py create-bug \
 创建成功后，向用户报告：
 - Bug 编号（返回的 `id`）
 - Bug 标题
-- Bug 链接: `https://pm.xxxxx.net/zentao/bug-view-<id>.html`
+- Bug 链接: `$env:ZENTAO_URL/bug-view-<id>.html`
 - 附件关联情况：若 `_attachments` 中有 `ok=false` 的文件，说明该实例服务端限制自动上传，需通过 Web 界面手动关联，并附上本地文件路径
 
 ## 作为 Python 模块使用
 
-复杂场景（如批量提交、循环处理）可直接 import：
-
 ```python
-import sys
-sys.path.insert(0, '/path/to/zentao-bug-submitter/scripts')
+import os
 from zentao_client import ZentaoClient
 
 client = ZentaoClient(
-    base_url='https://pm.xxxxx.net/zentao',
-    account='xxxxx',
-    password='<密码>',
-    verify_ssl=False,  # 内网自签名证书
+    base_url=os.environ['ZENTAO_URL'],
+    account=os.environ['ZENTAO_ACCOUNT'],
+    password=os.environ['ZENTAO_PASSWORD'],
+    verify_ssl=os.environ.get('ZENTAO_VERIFY_SSL', '1') != '0',  # 内网自签名证书时设 False
 )
 
 # 自动登录
@@ -218,8 +236,8 @@ print(f"Bug #{bug['id']} 创建成功")
 
 ## 注意事项
 
-1. **密码安全**: 不要在回复中明文展示密码。通过环境变量 `ZENTAO_PASSWORD` 或命令行参数传入，执行时不在输出中回显。
-2. **SSL 证书**: 内网地址如报 SSL 错误，加 `--no-verify` 参数。
+1. **连接信息安全**: 禁止在任何文档、代码、回复中硬编码真实的禅道地址、账号、密码。一律通过环境变量 `ZENTAO_URL` / `ZENTAO_ACCOUNT` / `ZENTAO_PASSWORD` 提供；缺失时提醒用户设置。执行命令时不在输出中回显明文密码。
+2. **SSL 证书**: 内网地址如报 SSL 错误，加 `--no-verify` 参数（或设置 `ZENTAO_VERIFY_SSL=0`）。
 3. **必填字段**: 不同禅道后台配置可能有不同的必填字段。如果创建失败，仔细阅读错误信息补充缺失字段。**openedBuild 不可为 0，必须传有效版本 ID**。
 4. **附件上传**: 部分禅道实例的附件上传接口存在服务端问题（返回 `{"error":"error"}`），此时可跳过附件步骤。
 5. **Token 过期**: 脚本每次操作前自动检查登录状态，token 过期会自动重新登录。

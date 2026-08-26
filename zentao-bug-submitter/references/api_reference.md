@@ -23,8 +23,8 @@ POST /tokens
 Content-Type: application/json
 
 {
-  "account": "xxxxx",
-  "password": "xxxxxxxx"
+  "account": "<账号>",
+  "password": "<密码>"
 }
 ```
 
@@ -54,7 +54,7 @@ GET /products?limit=100
 ```json
 {
   "products": [
-    { "id": "1", "name": "xx智能锁", "code": "lock", "status": "normal" }
+    { "id": "1", "name": "鹿客智能锁", "code": "lock", "status": "normal" }
   ],
   "page": 1, "total": 10
 }
@@ -86,8 +86,8 @@ GET /builds?project=<project_id>&limit=100
 ```
 
 > **注意**：部分禅道实例需要通过 `project` 参数查询，而非 `type=product&param=<product_id>`。
-> 可从产品详情中获取对应的 project id（如 X-Men 产品对应 project=182）。
-> **部分账号**（如 xxxxx）查询 builds 会返回 403（无项目浏览权限），此时请直接使用版本号字符串创建 Bug。
+> 可从产品详情中获取对应的 project id。
+> **部分账号**可能无项目浏览权限（builds 查询返回 403），此时请直接使用版本号字符串创建 Bug。
 
 **响应关键字段：**
 ```json
@@ -306,7 +306,7 @@ https://<host>/zentao/bug-view-<bug_id>.html
 
 ### 4. 获取版本列表返回 "Need project id."
 - 该禅道实例需要通过 `--project-id` 参数查询版本
-- 从产品详情中获取对应的 project id（如 X-Men 产品对应 project=182）
+- 从产品详情中获取对应的 project id
 
 ### 5. 获取用户列表返回 "no company-browse priv."
 - 当前账号没有公司浏览权限，忽略即可

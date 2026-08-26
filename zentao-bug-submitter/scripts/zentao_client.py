@@ -5,9 +5,9 @@
 支持：账号密码登录换 token、获取产品/模块/版本/用户列表、上传附件、创建 Bug。
 既可作为 Python 模块 import，也可作为 CLI 工具直接调用。
 
-用法示例（CLI）：
+用法示例（CLI，连接信息优先从环境变量 ZENTAO_URL/ZENTAO_ACCOUNT/ZENTAO_PASSWORD 读取）：
   # 登录并获取 token
-  python3 zentao_client.py login --url https://pm.xxxxx.net/zentao --account xxxxx --password 'xxx'
+  python3 zentao_client.py login
 
   # 获取产品列表
   python3 zentao_client.py products --url ... --account ... --password ...
@@ -34,7 +34,7 @@
   python3 zentao_client.py create-bug \
     --product-id 1 --module 5 --title "xxx" --severity 3 --pri 3 \
     --opened-build 3 --assigned-to zhangsan \
-    --steps "<p>重现步骤：...</p><p>预期：...</p><p>实际：...</p>" \
+    --steps "【测试步骤】\n  1. xxx\n\n【实际结果】\n  xxx\n\n【预期结果】\n  xxx" \
     --uid my-uid-001 --os "Windows 11" --browser "Chrome 120" \
     --url ... --account ... --password ...
 
@@ -63,7 +63,7 @@ class ZentaoClient:
 
     def __init__(self, base_url, account, password, verify_ssl=True, debug=False):
         """
-        base_url: 禅道根地址，如 https://pm.xxxxx.net/zentao
+        base_url: 禅道根地址，如 https://<host>/zentao
         account/password: 登录账号密码
         verify_ssl: 是否校验 SSL 证书（内网自签名证书可设 False）
         debug: 开启后打印请求和响应详情，便于排查
@@ -382,11 +382,14 @@ class ZentaoClient:
             except ValueError:
                 resolved.append(matched)
         opened_build = resolved
-        # 自动注入 execution（如未指定）
+        # 自动注入 execution（如未指定；查询失败不阻断建单）
         if execution is None:
-            exec_id = self.get_execution(product_id)
-            if exec_id is not None:
-                execution = exec_id
+            try:
+                exec_id = self.get_execution(product_id)
+                if exec_id is not None:
+                    execution = exec_id
+            except Exception:
+                pass
 
         payload = {
             'title': title,
@@ -468,26 +471,13 @@ def _print_json(data):
 
 def _steps_to_html(steps):
     """
-    把 plain text 重现步骤转换为带 <br/> 换行的 HTML。
-    禅道的 steps 字段是 Kindeditor 富文本，纯文本 \n 会被浏览器折叠成一行，
-    因此必须转成 <br/> 才能正常换行显示。
+    直接返回纯文本步骤。
+
+    注意：部分禅道实例会在服务端对 steps 内容做 HTML 转义，若客户端预先把
+    \\n 转成 <br />，会被二次转义成 &lt;br /&gt; 导致页面显示字面量标签。
+    实测服务端会保留 \\n 并自行处理换行，因此客户端不做任何转换。
     """
-    if not steps:
-        return steps
-    lines = steps.split('\n')
-    parts = []
-    blank_run = 0
-    for ln in lines:
-        if not ln.strip():
-            blank_run += 1
-            continue
-        esc = ln.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-        stripped = esc.lstrip(' ')
-        indent = esc[:len(esc) - len(stripped)].replace(' ', '&nbsp;')
-        if parts:
-            parts.append('<br />')
-        parts.append(indent + stripped)
-    return '\n'.join(parts)
+    return steps
 
 
 def cmd_login(args):
@@ -582,7 +572,7 @@ def cmd_create_bug(args):
 def main():
     parser = argparse.ArgumentParser(description='禅道 REST API v1 客户端')
     parser.add_argument('--url', default=os.environ.get('ZENTAO_URL', ''),
-                        help='禅道根地址，如 https://pm.xxxxx.net/zentao')
+                        help='禅道根地址，如 https://<host>/zentao（默认读环境变量 ZENTAO_URL）')
     parser.add_argument('--account', default=os.environ.get('ZENTAO_ACCOUNT', ''),
                         help='登录账号')
     parser.add_argument('--password', default=os.environ.get('ZENTAO_PASSWORD', ''),
@@ -636,7 +626,7 @@ def main():
     p.add_argument('--pri', type=int, required=True, help='优先级 1-5')
     p.add_argument('--opened-build', required=True, nargs='+',
                    help='影响版本 ID，可多个（支持字符串如 APP_601_28）')
-    p.add_argument('--steps', required=True, help='重现步骤（plain text，自动转 HTML 换行）')
+    p.add_argument('--steps', required=True, help='重现步骤（plain text，\\n 分隔，服务端处理换行）')
     p.add_argument('--module', type=int, default=None)
     p.add_argument('--assigned-to', default=None, help='指派给用户账号')
     p.add_argument('--bug-type', default='codeerror',
