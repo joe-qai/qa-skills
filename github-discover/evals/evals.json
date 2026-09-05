@@ -1,0 +1,44 @@
+{
+  "skill_name": "github-discover",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "搜一下现在GitHub上热门的Python AI Agent框架有哪些，给我Top 5",
+      "expected_output": "返回5个左右热门Python AI Agent相关仓库，包含名称、stars、描述、语言、更新时间；不自动 clone",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "帮我找一个用Rust写的Web框架，要有async特性，比较活跃的项目",
+      "expected_output": "返回Rust Web框架的搜索结果，如actix-web、axum等，包含stars和描述；不自动 clone",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "帮我调研一下 langchain-ai/langchain 这个项目的技术栈，用不用clone都行，告诉我它的主要依赖和架构就行",
+      "expected_output": "通过 API 获取仓库元数据和 README 信息，输出技术栈分析；不执行 clone（用户说 clone 都行，但优先不 clone）",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "今天的GitHub热榜是什么？帮我选一个Python项目，生成一篇公众号风格的长文和配图",
+      "expected_output": "运行 daily_discover.py，选出一个热门Python项目，生成 blog.md + card.png，沙箱自动清理",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "对比一下 langchain 和 crewAI 的技术栈差异",
+      "expected_output": "同时获取两个仓库 API 元数据，输出对比表格，涵盖依赖语言、核心框架、stars、最近更新等；不自动 clone",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "帮我把 langchain-ai/langchain clone 到沙箱，做深度技术拓印，生成报告，研究完删掉沙箱",
+      "expected_output": "git clone --depth 1 到 .github_sandbox/langchain/，运行 analyze_repo.py 生成报告到 .github_research/langchain/report.md，最后清理沙箱",
+      "files": []
+    }
+  ]
+}
+  ]
+}
+
