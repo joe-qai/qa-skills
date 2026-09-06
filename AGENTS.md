@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-AI Agent Testing Skills Collection for iFlow CLI. 21 skills for software testing lifecycle.
+AI Agent Testing Skills Collection for iFlow CLI. 22 skills for software testing lifecycle.
 
 **Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx, pypdf
 
 ---
 
-## Skill Inventory (21 Skills)
+## Skill Inventory (22 Skills)
 
 | Skill | Purpose | Commands/Resources |
 |-------|---------|-------------------|
@@ -33,6 +33,7 @@ AI Agent Testing Skills Collection for iFlow CLI. 21 skills for software testing
 | `pptx` | PPT processing | thumbnail.py, markitdown |
 | `github-discover` | GitHub search + daily trending repo → blog post generator | github_api.py, daily_discover.py |
 | `zentao-bug-submitter` | 禅道 Bug 自动提交（REST API v1） | zentao_client.py |
+| `browser-use` | CDP 浏览器自动化（爬取/测试/截图/交互） | browser-use CLI |
 
 ---
 
@@ -224,6 +225,9 @@ npx agent-browser           with_server.py          run_eval.py
 
 github-discover/
 GitHub 搜索 + 每日热榜文章生成
+
+browser-use/
+CDP 浏览器自动化（爬取/截图/表单交互/测试）
 ```
 
 ---
@@ -239,6 +243,9 @@ GitHub 搜索 + 每日热榜文章生成
 - `ZENTAO_ACCOUNT`: 禅道登录账号
 - `ZENTAO_PASSWORD`: 禅道登录密码
 - `ZENTAO_VERIFY_SSL`: 可选，设为 `0` 不校验 SSL 证书（内网自签名证书场景）
+- `BROWSER_USE_API_KEY`: Browser Use Cloud API key（可选，远程浏览器）
+- `BH_DOMAIN_SKILLS`: 启用域名级技能（`1`）
+- `BH_AGENT_WORKSPACE`: 自定义工作区路径
 
 ---
 

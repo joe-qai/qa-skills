@@ -1,6 +1,6 @@
 # 🧪 QA-Skills
 
-AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **21 个专业技能**。
+AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **22 个专业技能**。
 
 ## ✨ 技能一览
 
@@ -27,6 +27,7 @@ AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测�
 | **pptx** | PPT 处理：创建/编辑/缩略图生成 | `thumbnail.py`, `markitdown` |
 | **github-discover** | GitHub 搜索 + 每日热榜文章生成 | `github_api.py`, `daily_discover.py` |
 | **zentao-bug-submitter** | 禅道 Bug 自动提交（REST API v1） | `zentao_client.py` |
+| **browser-use** | CDP 浏览器自动化（爬取/测试/截图/表单交互） | `browser-use` CLI |
 
 ## 🔄 完整工作流
 
@@ -75,6 +76,9 @@ recalc.py                   人物思维蒸馏             references/
 
 github-discover/
 GitHub 搜索 + 每日热榜文章生成
+
+browser-use/
+CDP 浏览器自动化（爬取/截图/表单交互/测试）
 ```
 
 ## 🚀 快速开始
@@ -353,6 +357,8 @@ qa-skills/
 │   ├── evals/
 │   ├── references/
 │   └── scripts/
+├── browser-use/                # CDP 浏览器自动化（爬取/截图/表单交互/测试）
+│   └── SKILL.md
 ├── zentao-bug-submitter/       # 禅道 Bug 自动提交（REST API v1）
 │   ├── SKILL.md
 │   ├── references/
@@ -397,6 +403,9 @@ skill-name/
 | `ZENTAO_ACCOUNT` | 禅道登录账号 | zentao-bug-submitter |
 | `ZENTAO_PASSWORD` | 禅道登录密码 | zentao-bug-submitter |
 | `ZENTAO_VERIFY_SSL` | 是否校验 SSL（内网自签名证书设为 0） | zentao-bug-submitter |
+| `BROWSER_USE_API_KEY` | Browser Use Cloud API key（远程浏览器） | browser-use |
+| `BH_DOMAIN_SKILLS` | 启用域名级技能（`1`） | browser-use |
+| `BH_AGENT_WORKSPACE` | 自定义工作区路径 | browser-use |
 
 ## 🛠️ 技术栈
 
