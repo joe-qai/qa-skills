@@ -1,6 +1,6 @@
 # 🧪 QA-Skills
 
-AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **19 个专业技能**。
+AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **20 个专业技能**。
 
 ## ✨ 技能一览
 
@@ -25,6 +25,7 @@ AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测�
 | **xlsx** | Excel 处理：创建/编辑/数据分析 | `recalc.py` |
 | **pdf** | PDF 处理：提取/合并/分割/表单填写 | pypdf, pdfplumber |
 | **pptx** | PPT 处理：创建/编辑/缩略图生成 | `thumbnail.py`, `markitdown` |
+| **github-discover** | GitHub 搜索 + 每日热榜文章生成 | `github_api.py`, `daily_discover.py` |
 
 ## 🔄 完整工作流
 
@@ -70,6 +71,9 @@ npx agent-browser           with_server.py          run_eval.py
 ```
 xlsx/                       huashu-nuwa/            prompt-engineer/
 recalc.py                   人物思维蒸馏             references/
+
+github-discover/
+GitHub 搜索 + 每日热榜文章生成
 ```
 
 ## 🚀 快速开始
@@ -343,6 +347,11 @@ qa-skills/
 ├── xlsx/                       # Excel 处理
 │   ├── SKILL.md
 │   └── scripts/
+├── github-discover/            # GitHub 开源项目发现与每日热榜文章生成
+│   ├── SKILL.md
+│   ├── evals/
+│   ├── references/
+│   └── scripts/
 ├── AGENTS.md                   # Agent 指南
 └── CLAUDE.md                   # Claude Code 指南
 ```
@@ -378,6 +387,7 @@ skill-name/
 | `AGENT_BROWSER_ENCRYPTION_KEY` | 认证保险库加密密钥 | agent-browser |
 | `AGENT_BROWSER_HEADED` | 启用可视化浏览器模式 | agent-browser |
 | `AGENT_BROWSER_DEFAULT_TIMEOUT` | 默认超时时间 | agent-browser |
+| `GITHUB_TOKEN` | GitHub API token（可选，提升限频至 5000次/小时） | github-discover |
 
 ## 🛠️ 技术栈
 

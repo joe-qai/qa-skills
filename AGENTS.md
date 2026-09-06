@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-AI Agent Testing Skills Collection for iFlow CLI. 19 skills for software testing lifecycle.
+AI Agent Testing Skills Collection for iFlow CLI. 20 skills for software testing lifecycle.
 
 **Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx, pypdf
 
 ---
 
-## Skill Inventory (19 Skills)
+## Skill Inventory (20 Skills)
 
 | Skill | Purpose | Commands/Resources |
 |-------|---------|-------------------|
@@ -31,6 +31,7 @@ AI Agent Testing Skills Collection for iFlow CLI. 19 skills for software testing
 | `xlsx` | Excel processing | recalc.py |
 | `pdf` | PDF processing | pypdf, pdfplumber |
 | `pptx` | PPT processing | thumbnail.py, markitdown |
+| `github-discover` | GitHub search + daily trending repo → blog post generator | github_api.py, daily_discover.py |
 
 ---
 
@@ -218,7 +219,10 @@ theme-factory/              pptx/                  pdf/
 ```
 agent-browser/              webapp-testing/         skill-creator/
 npx agent-browser           with_server.py          run_eval.py
-                                                      quick_validate.py
+                                                       quick_validate.py
+
+github-discover/
+GitHub 搜索 + 每日热榜文章生成
 ```
 
 ---
@@ -229,7 +233,8 @@ npx agent-browser           with_server.py          run_eval.py
 - `AGENT_BROWSER_ENCRYPTION_KEY`: Auth vault encryption key
 - `AGENT_BROWSER_HEADED`: Enable visual browser mode
 - `AGENT_BROWSER_DEFAULT_TIMEOUT`: Default timeout
+- `GITHUB_TOKEN`: GitHub API token（可选，提升限频至 5000次/小时）
 
 ---
 
-**Last Updated**: 2026-05-15
+**Last Updated**: 2026-09-05
