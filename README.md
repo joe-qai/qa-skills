@@ -1,6 +1,6 @@
 # 🧪 QA-Skills
 
-AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **20 个专业技能**。
+AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **21 个专业技能**。
 
 ## ✨ 技能一览
 
@@ -26,6 +26,7 @@ AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测�
 | **pdf** | PDF 处理：提取/合并/分割/表单填写 | pypdf, pdfplumber |
 | **pptx** | PPT 处理：创建/编辑/缩略图生成 | `thumbnail.py`, `markitdown` |
 | **github-discover** | GitHub 搜索 + 每日热榜文章生成 | `github_api.py`, `daily_discover.py` |
+| **zentao-bug-submitter** | 禅道 Bug 自动提交（REST API v1） | `zentao_client.py` |
 
 ## 🔄 完整工作流
 
@@ -352,6 +353,10 @@ qa-skills/
 │   ├── evals/
 │   ├── references/
 │   └── scripts/
+├── zentao-bug-submitter/       # 禅道 Bug 自动提交（REST API v1）
+│   ├── SKILL.md
+│   ├── references/
+│   └── scripts/
 ├── AGENTS.md                   # Agent 指南
 └── CLAUDE.md                   # Claude Code 指南
 ```
@@ -388,6 +393,10 @@ skill-name/
 | `AGENT_BROWSER_HEADED` | 启用可视化浏览器模式 | agent-browser |
 | `AGENT_BROWSER_DEFAULT_TIMEOUT` | 默认超时时间 | agent-browser |
 | `GITHUB_TOKEN` | GitHub API token（可选，提升限频至 5000次/小时） | github-discover |
+| `ZENTAO_URL` | 禅道根地址 | zentao-bug-submitter |
+| `ZENTAO_ACCOUNT` | 禅道登录账号 | zentao-bug-submitter |
+| `ZENTAO_PASSWORD` | 禅道登录密码 | zentao-bug-submitter |
+| `ZENTAO_VERIFY_SSL` | 是否校验 SSL（内网自签名证书设为 0） | zentao-bug-submitter |
 
 ## 🛠️ 技术栈
 

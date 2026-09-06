@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-AI Agent Testing Skills Collection for iFlow CLI. 20 skills for software testing lifecycle.
+AI Agent Testing Skills Collection for iFlow CLI. 21 skills for software testing lifecycle.
 
 **Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx, pypdf
 
 ---
 
-## Skill Inventory (20 Skills)
+## Skill Inventory (21 Skills)
 
 | Skill | Purpose | Commands/Resources |
 |-------|---------|-------------------|
@@ -32,6 +32,7 @@ AI Agent Testing Skills Collection for iFlow CLI. 20 skills for software testing
 | `pdf` | PDF processing | pypdf, pdfplumber |
 | `pptx` | PPT processing | thumbnail.py, markitdown |
 | `github-discover` | GitHub search + daily trending repo → blog post generator | github_api.py, daily_discover.py |
+| `zentao-bug-submitter` | 禅道 Bug 自动提交（REST API v1） | zentao_client.py |
 
 ---
 
@@ -234,6 +235,10 @@ GitHub 搜索 + 每日热榜文章生成
 - `AGENT_BROWSER_HEADED`: Enable visual browser mode
 - `AGENT_BROWSER_DEFAULT_TIMEOUT`: Default timeout
 - `GITHUB_TOKEN`: GitHub API token（可选，提升限频至 5000次/小时）
+- `ZENTAO_URL`: 禅道根地址（如 `https://<host>/zentao`）
+- `ZENTAO_ACCOUNT`: 禅道登录账号
+- `ZENTAO_PASSWORD`: 禅道登录密码
+- `ZENTAO_VERIFY_SSL`: 可选，设为 `0` 不校验 SSL 证书（内网自签名证书场景）
 
 ---
 
