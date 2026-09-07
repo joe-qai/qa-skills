@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Skills 对比报告 — qa-skills vs awesome-qa-skills</title>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2e;
+    --border: #2a2a40;
+    --text: #e2e2f0;
+    --text2: #9090b0;
+    --accent: #667eea;
+    --accent2: #f093fb;
+    --green: #38ef7d;
+    --orange: #ed8936;
+    --red: #fc8181;
+    --blue: #63b3ed;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 2rem;
+  }
+  h1 { font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 0.5rem;
+       background: linear-gradient(135deg, var(--accent), var(--accent2));
+       -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { text-align: center; color: var(--text2); margin-bottom: 2.5rem; font-size: 0.95rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 1200px; margin: 0 auto 2rem; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+  .card h2 { font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card h2 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot-ours { background: var(--accent); }
+  .dot-theirs { background: var(--accent2); }
+  .stat-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+  .stat-box {
+    flex: 1; background: var(--surface2); border-radius: 0.75rem; padding: 1rem; text-align: center;
+    border: 1px solid var(--border);
+  }
+  .stat-box .num { font-size: 2rem; font-weight: 800; }
+  .stat-box .label { font-size: 0.8rem; color: var(--text2); margin-top: 0.25rem; }
+  .num-accent { color: var(--accent); }
+  .num-accent2 { color: var(--accent2); }
+  .num-green { color: var(--green); }
+  .num-orange { color: var(--orange); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 0.6rem 0.75rem; color: var(--text2); font-weight: 600;
+       border-bottom: 1px solid var(--border); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(102,126,234,0.05); }
+  .badge {
+    display: inline-block; padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600;
+  }
+  .badge-green { background: rgba(56,239,125,0.15); color: var(--green); }
+  .badge-orange { background: rgba(237,137,54,0.15); color: var(--orange); }
+  .badge-blue { background: rgba(99,179,237,0.15); color: var(--blue); }
+  .badge-red { background: rgba(252,129,129,0.15); color: var(--red); }
+  .badge-purple { background: rgba(240,147,251,0.15); color: var(--accent2); }
+  .full-width { max-width: 1200px; margin: 0 auto 2rem; }
+  .section-title {
+    font-size: 1.25rem; font-weight: 700; margin: 2rem auto 1rem; max-width: 1200px;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-title::before {
+    content: ''; width: 4px; height: 24px; border-radius: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+  }
+  .skill-tag {
+    display: inline-block; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 0.5rem; padding: 0.3rem 0.6rem; font-size: 0.8rem; margin: 0.15rem;
+  }
+  .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 800px) { .comparison-grid { grid-template-columns: 1fr; } }
+  .comp-col { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1.25rem; }
+  .comp-col h3 { font-size: 0.95rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .adv-list { list-style: none; }
+  .adv-list li { padding: 0.4rem 0; font-size: 0.85rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+  .adv-list li::before { content: '▸'; color: var(--accent); flex-shrink: 0; margin-top: 0.1rem; }
+  .theirs-adv li::before { color: var(--accent2); }
+  .overlap-bar {
+    max-width: 1200px; margin: 0 auto 2rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem;
+  }
+  .bar-container { display: flex; height: 32px; border-radius: 0.5rem; overflow: hidden; margin-top: 1rem; }
+  .bar-ours { background: linear-gradient(90deg, var(--accent), #818cf8); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+  .bar-theirs { background: linear-gradient(90deg, var(--accent2), #f472b6); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+  .legend { display: flex; gap: 2rem; margin-top: 0.75rem; justify-content: center; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text2); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .legend-dot.ours { background: var(--accent); }
+  .legend-dot.theirs { background: var(--accent2); }
+  .gap-table td:first-child { font-weight: 600; color: var(--blue); }
+  .gap-table td:nth-child(2) { color: var(--text2); font-size: 0.8rem; }
+  .footer { text-align: center; color: var(--text2); font-size: 0.75rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<h1>🧪 QA Skills 对比报告</h1>
+<p class="subtitle">qa-skills（本项目）vs naodeng/awesome-qa-skills — 技能覆盖度与优势分析</p>
+
+<!-- Overview Stats -->
+<div class="grid">
+  <div class="card">
+    <h2><span class="dot dot-ours"></span> qa-skills（本项目）</h2>
+    <div class="stat-row">
+      <div class="stat-box"><div class="num num-accent">25</div><div class="label">技能总数</div></div>
+      <div class="stat-box"><div class="num num-green">~10</div><div class="label">含可执行脚本</div></div>
+      <div class="stat-box"><div class="num num-orange">2026-09</div><div class="label">最近更新</div></div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--text2)">聚焦软件测试全生命周期，偏向<strong>可运行、可执行</strong>的落地技能，每个 skill 附带 Python 脚本和 evals。</p>
+  </div>
+  <div class="card">
+    <h2><span class="dot dot-theirs"></span> awesome-qa-skills</h2>
+    <div class="stat-row">
+      <div class="stat-box"><div class="num num-accent2">158</div><div class="label">技能总数（zh+en）</div></div>
+      <div class="stat-box"><div class="num num-green">79</div><div class="label">中文 / 英文各79</div></div>
+      <div class="stat-box"><div class="num num-orange">66</div><div class="label">测试类型覆盖</div></div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--text2)">按语言分区，覆盖<strong>Core → Engineering → Production → AI Native</strong>四阶段，包含完整评测（skill-up）和双语文档。</p>
+  </div>
+</div>
+
+<!-- Overlap Bar -->
+<div class="overlap-bar">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <strong>技能重合度</strong>
+    <span style="font-size:0.85rem;color:var(--text2)">本项目的 25 个技能中，约 6 个在 awesome-qa-skills 中有对应实现</span>
+  </div>
+  <div class="bar-container">
+    <div class="bar-ours" style="width:10%">qa-skills</div>
+    <div class="bar-theirs" style="width:90%">awesome-qa-skills</div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot ours"></div> qa-skills（25 skills）</div>
+    <div class="legend-item"><div class="legend-dot theirs"></div> awesome-qa-skills（158 skills，中英双语）</div>
+  </div>
+</div>
+
+<!-- Key Findings -->
+<div class="section-title">关键发现</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>✅ 本项目的优势</h2>
+    <ul class="adv-list">
+      <li><strong>可执行性</strong>：每个技能附带 Python 脚本（如 <code>analyze_repo.py</code>、<code>daily_discover.py</code>），开箱即用</li>
+      <li><strong>Browser Use 集成</strong>：本地 CDP 浏览器自动化，无需外部服务，支持 Cloud 模式</li>
+      <li><strong>禅道 Bug 提交</strong>：REST API v1 直连，支持附件上传、批量操作，awesome 无此技能</li>
+      <li><strong>每日热榜流水线</strong>：<code>daily_discover.py</code> 一键完成 clone→分析→写文章→出图，awesome 无此能力</li>
+      <li><strong>Skill 工程工具链</strong>：skill-creator、darwin-skill（自动优化）、skill-vetter（安全审查）形成闭环</li>
+      <li><strong>离线优先</strong>：J-Link/嵌入式工具包优先本地解压，不依赖在线源</li>
+      <li><strong>完整 evals</strong>：每个新 skill 都附带 evals.json，可量化评测</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>🔴 awesome-qa-skills 的优势</h2>
+    <ul class="adv-list theirs-adv">
+      <li><strong>测试类型全覆盖</strong>：66 种专项测试类型（性能、安全、LLM、AI Agent、移动端…），本项目仅覆盖基础功能测试</li>
+      <li><strong>AI/LLM 测试能力</strong>：<code>llm-testing</code>、<code>ai-agent-testing</code>、<code>prompt-testing</code>、<code>prompt-injection-testing</code> — 这是本项目最大的空白</li>
+      <li><strong>性能测试</strong>：k6、JMeter、Gatling 全套，本项目无</li>
+      <li><strong>生产质量</strong>：<code>production-incident-analysis</code>、<code>distributed-trace-analysis</code>、<code>metrics-anomaly-analysis</sub></code></li>
+      <li><strong>双语文档</strong>：所有 skill 中英双语，适合跨国团队</li>
+      <li><strong>工作流编排</strong>：日常/迭代/发布三个完整工作流，本项目缺少端到端流程编排</li>
+      <li><strong>评测体系</strong>：skill-up 框架，全量 skill 可被校验和实跑</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Overlap Details -->
+<div class="section-title">重叠技能对比</div>
+
+<table style="max-width:1200px;margin:0 auto 2rem;background:var(--surface);border-radius:1rem;overflow:hidden;border:1px solid var(--border)">
+  <thead>
+    <tr>
+      <th style="background:var(--surface2)">技能</th>
+      <th style="background:var(--surface2)">qa-skills 实现</th>
+      <th style="background:var(--surface2)">awesome-qa-skills 对应</th>
+      <th style="background:var(--surface2)">差异</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>需求分析</strong></td>
+      <td><span class="badge badge-green">✅ 3 个 skill</span><br>requirements-analyzer（多格式提取）<br>requirements-analysis（对话式）<br>analyze-requirements（全流程编排）</td>
+      <td><span class="badge badge-purple">📋 requirements-analysis</span><br>requirements-analysis-plus<br>requirement-gap-analysis</td>
+      <td>本项目更完整，包含多格式解析器和全流程 Agent 编排</td>
+    </tr>
+    <tr>
+      <td><strong>测试用例生成</strong></td>
+      <td><span class="badge badge-green">✅ 2 个 skill</span><br>testcase-planner（ITEM/POINT 层级）<br>testcase-generator（Markdown/Excel/XMind）</td>
+      <td><span class="badge badge-purple">📋 test-case-writing</span><br>testcase-writer-plus<br>test-case-reviewer</td>
+      <td>本项目有可执行脚本（validate.py, to_excel.py），awesome 偏文档规范</td>
+    </tr>
+    <tr>
+      <td><strong>Web 测试</strong></td>
+      <td><span class="badge badge-green">✅ 2 个 skill</span><br>webapp-testing（Playwright 驱动）<br>browser-use（CDP 浏览器自动化）</td>
+      <td><span class="badge badge-purple">📋 ui-test-playwright</span><br>ui-test-selenium<br>automation-testing</td>
+      <td>本项目额外包含 CDP 级别控制（browser-use），更底层灵活</td>
+    </tr>
+    <tr>
+      <td><strong>Prompt 工程</strong></td>
+      <td><span class="badge badge-green">✅ prompt-engineer</span><br>设计/优化/评估 LLM Prompts</td>
+      <td><span class="badge badge-purple">📋 prompt-testing</span><br>prompt-injection-testing</td>
+      <td>互补：本项目侧重<strong>创建</strong>，awesome 侧重<strong>测试/安全</strong></td>
+    </tr>
+    <tr>
+      <td><strong>设计稿分析</strong></td>
+      <td><span class="badge badge-green">✅ lanhu-design</span><br>蓝湖/Axure 原型 MCP Server</td>
+      <td><span class="badge badge-red">❌ 无对应</span></td>
+      <td>本项目独有，针对国内设计平台</td>
+    </tr>
+    <tr>
+      <td><strong>Bug 提交</strong></td>
+      <td><span class="badge badge-green">✅ zentao-bug-submitter</span><br>禅道 REST API v1 全流程</td>
+      <td><span class="badge badge-purple">📋 bug-reporting</span>（轻量版）</td>
+      <td>本项目更全面，支持附件上传、批量操作、动态选项查询</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gaps -->
+<div class="section-title">本项目缺失的关键技能（来自 awesome-qa-skills）</div>
+
+<table class="gap-table" style="max-width:1200px;margin:0 auto 2rem;background:var(--surface);border-radius:1rem;overflow:hidden;border:1px solid var(--border)">
+  <thead>
+    <tr>
+      <th style="background:var(--surface2)">分类</th>
+      <th style="background:var(--surface2)">技能名称</th>
+      <th style="background:var(--surface2)">说明</th>
+      <th style="background:var(--surface2)">优先级</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="4"><span class="badge badge-red">AI 测试</span></td>
+      <td><strong>llm-testing</strong></td>
+      <td>LLM 行为测试、失败模式、鲁棒性与事实性验证</td>
+      <td><span class="badge badge-red">P0</span></td>
+    </tr>
+    <tr>
+      <td><strong>ai-agent-testing</strong></td>
+      <td>Agent 规划/记忆/工具调用/恢复能力/安全边界测试</td>
+      <td><span class="badge badge-red">P0</span></td>
+    </tr>
+    <tr>
+      <td><strong>prompt-testing</strong></td>
+      <td>Prompt 质量评估、边界测试</td>
+      <td><span class="badge badge-orange">P1</span></td>
+    </tr>
+    <tr>
+      <td><strong>prompt-injection-testing</strong></td>
+      <td>Prompt 注入攻击检测与安全测试</td>
+      <td><span class="badge badge-orange">P1</span></td>
+    </tr>
+    <tr>
+      <td rowspan="3"><span class="badge badge-blue">性能测试</span></td>
+      <td><strong>performance-test-k6</strong></td>
+      <td>k6 压测脚本编写与执行</td>
+      <td><span class="badge badge-orange">P1</span></td>
+    </tr>
+    <tr>
+      <td><strong>performance-test-jmeter</strong></td>
+      <td>JMeter 压测脚本与报告</td>
+      <td><span class="badge badge-orange">P1</span></td>
+    </tr>
+    <tr>
+      <td><strong>capacity-planning-analysis</strong></td>
+      <td>容量规划与瓶颈分析</td>
+      <td><span class="badge badge-blue">P2</span></td>
+    </tr>
+    <tr>
+      <td rowspan="2"><span class="badge badge-purple">生产质量</span></td>
+      <td><strong>production-incident-analysis</strong></td>
+      <td>生产事故根因分析与复盘</td>
+      <td><span class="badge badge-blue">P2</span></td>
+    </tr>
+    <tr>
+      <td><strong>distributed-trace-analysis</strong></td>
+      <td>分布式链路追踪分析</td>
+      <td><span class="badge badge-blue">P2</span></td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-green">移动端</span></td>
+      <td><strong>mobile-testing</strong></td>
+      <td>移动端功能与兼容性测试</td>
+      <td><span class="badge badge-blue">P2</span></td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-orange">安全测试</span></td>
+      <td><strong>security-testing</strong></td>
+      <td>安全扫描与渗透测试流程</td>
+      <td><span class="badge badge-blue">P2</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Recommendations -->
+<div class="section-title">建议</div>
+
+<div class="comparison-grid" style="max-width:1200px;margin:0 auto 2rem">
+  <div class="comp-col">
+    <h3>🚀 建议优先补充（P0）</h3>
+    <ul class="adv-list">
+      <li><strong>llm-testing</strong> — 本项目有大量 LLM Agent 场景（langchain 研究、skill 评估），缺少 LLM 结果质量验证能力</li>
+      <li><strong>ai-agent-testing</strong> — 与 browser-use + github-discover 形成完整 AI 测试闭环</li>
+      <li><strong>prompt-injection-testing</strong> — 安全维度补齐，保护 LLM 应用</li>
+    </ul>
+  </div>
+  <div class="comp-col">
+    <h3>📈 建议中期补充（P1）</h3>
+    <ul class="adv-list">
+      <li><strong>performance-test-k6</strong> — k6 比 JMeter 更现代，脚本即代码，适合 CI 集成</li>
+      <li><strong>prompt-testing</strong> — 与 prompt-engineer 互补，形成"设计→测试"闭环</li>
+      <li><strong>release-testing-workflow</strong> — 填补从开发到上线的端到端工作流空白</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Verdict -->
+<div class="full-width card" style="margin-bottom:2rem">
+  <h2 style="margin-bottom:1rem">📊 综合评估</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+    <div>
+      <div style="font-size:0.8rem;color:var(--text2);margin-bottom:0.5rem">qa-skills 强项</div>
+      <div style="font-size:0.9rem">
+        <div class="skill-tag">可执行脚本</div>
+        <div class="skill-tag">CDP 浏览器控制</div>
+        <div class="skill-tag">禅道集成</div>
+        <div class="skill-tag">每日热榜文章</div>
+        <div class="skill-tag">Skill 工程闭环</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.8rem;color:var(--text2);margin-bottom:0.5rem">awesome 强项</div>
+      <div style="font-size:0.9rem">
+        <div class="skill-tag">66 种测试类型</div>
+        <div class="skill-tag">LLM/AI Agent 测试</div>
+        <div class="skill-tag">性能测试全套</div>
+        <div class="skill-tag">生产质量分析</div>
+        <div class="skill-tag">双语 + skill-up 评测</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.8rem;color:var(--text2);margin-bottom:0.5rem">结论</div>
+      <div style="font-size:0.9rem">
+        本项目在<strong>工程落地</strong>上明显优于 awesome（脚本、工具链、禅道、Browser Use），<br>
+        但缺少 <strong>AI/LLM 测试</strong>和<strong>性能测试</strong>两大关键能力，建议优先补充
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  报告生成时间：2026-09-05 &nbsp;·&nbsp; 数据来源：github.com/naodeng/awesome-qa-skills &nbsp;·&nbsp; 本地仓库：github.com/joe-qai/qa-skills
+</div>
+
+</body>
+</html>
