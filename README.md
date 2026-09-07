@@ -1,6 +1,6 @@
 # 🧪 QA-Skills
 
-AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **22 个专业技能**。
+AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **29 个专业技能**。
 
 ## ✨ 技能一览
 
@@ -28,6 +28,13 @@ AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测�
 | **github-discover** | GitHub 搜索 + 每日热榜文章生成 | `github_api.py`, `daily_discover.py` |
 | **zentao-bug-submitter** | 禅道 Bug 自动提交（REST API v1） | `zentao_client.py` |
 | **browser-use** | CDP 浏览器自动化（爬取/测试/截图/表单交互） | `browser-use` CLI |
+| **ai-agent-testing** | AI Agent 行为/规划/安全边界测试 | prompts/ |
+| **prompt-testing** | Prompt 质量评估与边界测试 | prompts/ |
+| **prompt-injection-testing** | Prompt 注入攻击检测与安全测试 | prompts/ |
+| **performance-test-jmeter** | JMeter 性能测试方案与报告 | performance-test-jmeter.md |
+| **capacity-planning-analysis** | 容量规划与瓶颈分析 | capacity-planning-analysis.md |
+| **mobile-testing** | 移动端功能与兼容性测试 | mobile-testing.md |
+| **security-testing** | 安全扫描与渗透测试流程 | security-testing.md |
 
 ## 🔄 完整工作流
 
@@ -359,6 +366,24 @@ qa-skills/
 │   └── scripts/
 ├── browser-use/                # CDP 浏览器自动化（爬取/截图/表单交互/测试）
 │   └── SKILL.md
+├── ai-agent-testing/           # AI Agent 行为/规划/安全边界测试
+│   └── SKILL.md
+├── prompt-testing/             # Prompt 质量评估与边界测试
+│   └── SKILL.md
+├── prompt-injection-testing/   # Prompt 注入攻击检测与安全测试
+│   └── SKILL.md
+├── performance-test-jmeter/    # JMeter 性能测试方案与报告
+│   ├── SKILL.md
+│   ├── references/
+│   └── scripts/
+├── capacity-planning-analysis/ # 容量规划与瓶颈分析
+│   └── SKILL.md
+├── mobile-testing/             # 移动端功能与兼容性测试
+│   ├── SKILL.md
+│   └── scripts/
+├── security-testing/           # 安全扫描与渗透测试流程
+│   ├── SKILL.md
+│   └── scripts/
 ├── zentao-bug-submitter/       # 禅道 Bug 自动提交（REST API v1）
 │   ├── SKILL.md
 │   ├── references/

@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-AI Agent Testing Skills Collection for iFlow CLI. 22 skills for software testing lifecycle.
+AI Agent Testing Skills Collection for iFlow CLI. 29 skills for software testing lifecycle.
 
 **Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx, pypdf
 
 ---
 
-## Skill Inventory (22 Skills)
+## Skill Inventory (29 Skills)
 
 | Skill | Purpose | Commands/Resources |
 |-------|---------|-------------------|
@@ -34,6 +34,13 @@ AI Agent Testing Skills Collection for iFlow CLI. 22 skills for software testing
 | `github-discover` | GitHub search + daily trending repo → blog post generator | github_api.py, daily_discover.py |
 | `zentao-bug-submitter` | 禅道 Bug 自动提交（REST API v1） | zentao_client.py |
 | `browser-use` | CDP 浏览器自动化（爬取/测试/截图/交互） | browser-use CLI |
+| `ai-agent-testing` | AI Agent 行为/规划/安全边界测试 | prompts/ |
+| `prompt-testing` | Prompt 质量评估与边界测试 | prompts/ |
+| `prompt-injection-testing` | Prompt 注入攻击检测与安全测试 | prompts/ |
+| `performance-test-jmeter` | JMeter 性能测试方案与报告 | performance-test-jmeter.md |
+| `capacity-planning-analysis` | 容量规划与瓶颈分析 | capacity-planning-analysis.md |
+| `mobile-testing` | 移动端功能与兼容性测试 | mobile-testing.md, convert_*.py |
+| `security-testing` | 安全扫描与渗透测试流程 | security-testing.md, run-scan.sh |
 
 ---
 
