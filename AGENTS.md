@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-AI Agent Testing Skills Collection for iFlow CLI. 29 skills for software testing lifecycle.
+AI Agent Testing Skills Collection for iFlow CLI. 32 skills for software testing lifecycle.
 
 **Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx, pypdf
 
