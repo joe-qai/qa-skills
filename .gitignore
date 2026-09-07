@@ -20,3 +20,6 @@ build/
 Thumbs.db
 # GitHub API cache
 .github_cache/
+
+# Research reference (not part of project)
+_research_awesome-qa-skills/
