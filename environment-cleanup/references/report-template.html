@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>环境整理可观测性报告</title>
+<style>
+  :root { --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #e2e8f0; --muted: #94a3b8; --green: #22c55e; --red: #ef4444; --yellow: #eab308; --blue: #3b82f6; --purple: #a855f7; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--blue), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; }
+  .stat-card .label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-card .value { font-size: 2rem; font-weight: 700; margin-top: 0.3rem; }
+  .stat-card .value.green { color: var(--green); }
+  .stat-card .value.yellow { color: var(--yellow); }
+  .stat-card .value.blue { color: var(--blue); }
+  .stat-card .value.red { color: var(--red); }
+  .stat-card .value.purple { color: var(--purple); }
+  .section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .section h2 { font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--border); color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+  td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: rgba(59, 130, 246, 0.05); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
+  .badge-green { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+  .badge-red { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+  .badge-yellow { background: rgba(234, 179, 8, 0.15); color: var(--yellow); }
+  .badge-blue { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
+  .badge-gray { background: rgba(148, 163, 184, 0.15); color: var(--muted); }
+  .path-list { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.8rem; columns: 2; column-gap: 2rem; }
+  .path-list li { padding: 0.3rem 0; list-style: none; break-inside: avoid; }
+  .path-list li::before { content: '→ '; color: var(--blue); }
+  .ok::before { content: '✓ '; color: var(--green) !important; }
+  .fail::before { content: '✗ '; color: var(--red) !important; }
+  .warn::before { content: '⚠ '; color: var(--yellow) !important; }
+  .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 0.5rem; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  code { background: rgba(59, 130, 246, 0.1); padding: 1px 4px; border-radius: 4px; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>环境整理可观测性报告</h1>
+<p class="subtitle">生成时间：{{TIMESTAMP}} | 备份位置：<code>{{BACKUP_PATH}}</code></p>
+
+<!-- 概览统计 -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="label">已迁移</div>
+    <div class="value green">{{MIGRATED_COUNT}}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">用户跳过</div>
+    <div class="value yellow">{{SKIPPED_COUNT}}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">释放空间</div>
+    <div class="value blue">{{FREED_SPACE}}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">幽灵路径清理</div>
+    <div class="value green">{{GHOST_CLEANED}}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">环境变量修复</div>
+    <div class="value green">{{ENV_FIXED}}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">验证通过率</div>
+    <div class="value green">{{VERIFY_RATE}}</div>
+  </div>
+</div>
+
+<!-- 迁移结果明细 -->
+<div class="section">
+  <h2>📊 迁移结果明细</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>软件</th><th>大小</th><th>操作</th><th>环境变量</th><th>注册表</th><th>验证</th></tr>
+    </thead>
+    <tbody>
+      {{MIGRATION_TABLE_ROWS}}
+    </tbody>
+  </table>
+</div>
+
+<!-- 环境变量清理记录 -->
+<div class="section">
+  <h2>🧹 环境变量清理记录</h2>
+  <table>
+    <thead>
+      <tr><th>操作</th><th>变量/路径</th><th>旧值</th><th>新值</th><th>状态</th></tr>
+    </thead>
+    <tbody>
+      {{ENV_CLEANUP_ROWS}}
+    </tbody>
+  </table>
+</div>
+
+<!-- 当前 PATH 状态 -->
+<div class="section">
+  <h2>📋 当前 PATH 状态（清理后）</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <div>
+      <h3 style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0.5rem;">系统 PATH（{{SYS_PATH_COUNT}} 条）</h3>
+      <ul class="path-list">
+        {{SYS_PATH_LIST}}
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0.5rem;">用户 PATH（{{USER_PATH_COUNT}} 条）</h3>
+      <ul class="path-list">
+        {{USER_PATH_LIST}}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 不可迁移软件 -->
+<div class="section">
+  <h2>🔒 不可迁移软件（系统/服务绑定）</h2>
+  <table>
+    <thead>
+      <tr><th>软件</th><th>大小</th><th>原因</th><th>服务</th></tr>
+    </thead>
+    <tbody>
+      {{IMMOVABLE_ROWS}}
+    </tbody>
+  </table>
+</div>
+
+<!-- 跳过的软件 -->
+<div class="section">
+  <h2>⏭️ 跳过的软件（待后续决定）</h2>
+  <table>
+    <thead>
+      <tr><th>软件</th><th>大小</th><th>风险</th><th>跳过原因</th></tr>
+    </thead>
+    <tbody>
+      {{SKIPPED_ROWS}}
+    </tbody>
+  </table>
+</div>
+
+<!-- 目标盘现状 -->
+<div class="section">
+  <h2>💾 目标盘已迁移软件现状</h2>
+  <table>
+    <thead>
+      <tr><th>路径</th><th>大小</th><th>状态</th></tr>
+    </thead>
+    <tbody>
+      {{TARGET_DRIVE_ROWS}}
+    </tbody>
+  </table>
+  <div class="progress-bar" style="margin-top: 1rem;">
+    <div class="progress-fill" style="width: {{DISK_USAGE_PERCENT}}%; background: linear-gradient(90deg, var(--green), var(--blue));"></div>
+  </div>
+  <p style="font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem;">目标盘已迁移 {{MIGRATED_TOTAL}} / 总可迁移 {{TOTAL_MIGRATABLE}}（{{USAGE_PERCENT}}）</p>
+</div>
+
+<!-- 磁盘空间对比 -->
+<div class="section">
+  <h2>💿 磁盘空间对比</h2>
+  <table>
+    <thead>
+      <tr><th>盘符</th><th>总容量</th><th>迁移前剩余</th><th>迁移后剩余</th><th>释放空间</th></tr>
+    </thead>
+    <tbody>
+      {{DISK_SPACE_ROWS}}
+    </tbody>
+  </table>
+</div>
+
+<!-- 备份状态 -->
+<div class="section">
+  <h2>💾 备份状态</h2>
+  <table>
+    <thead>
+      <tr><th>项目</th><th>详情</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>备份状态</td><td>{{BACKUP_STATUS}}</td></tr>
+      <tr><td>备份路径</td><td><code>{{BACKUP_PATH}}</code></td></tr>
+      <tr><td>备份内容</td><td>system_path.txt / user_path.txt / system_vars.json / user_vars.json</td></tr>
+      <tr><td>备份处理</td><td>{{BACKUP_DISPOSITION}}</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 安全提醒 -->
+<div class="section" style="border-color: var(--yellow);">
+  <h2>⚠️ 安全提醒</h2>
+  <ul style="padding-left: 1.5rem; color: var(--muted);">
+    <li>所有操作前均已备份环境变量至 <code>{{BACKUP_PATH}}</code></li>
+    <li>每次迁移均经过用户逐项授权，未批量执行</li>
+    <li>已迁移软件均已验证：文件数一致 + 主程序可执行 + PATH 正确</li>
+    <li>重启终端/资源管理器后环境变量变更生效</li>
+    <li>如需回滚，可从备份目录恢复 <code>system_path.txt</code> 和 <code>user_path.txt</code></li>
+    <li>磁盘空间预检已在最前执行，空间不足时提前中止</li>
+  </ul>
+</div>
+
+<div class="footer">
+  环境整理可观测性报告 | 生成于 {{TIMESTAMP}} | environment-cleanup v1.1.0
+</div>
+
+</div>
+</body>
+</html>
