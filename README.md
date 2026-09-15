@@ -1,14 +1,14 @@
 # 🧪 QA-Skills
 
-AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **32 个专业技能**。
+AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测试全生命周期——从需求分析到测试执行，共 **33 个专业技能**。
 
 ## ✨ 技能一览
 
 | 技能 | 用途 | 关键命令/资源 |
 |------|------|----------|
-| **requirements-analyzer** | 从 Excel/PDF/PNG/Word/TXT 提取需求 | references/ |
-| **requirements-analysis** | 多轮对话式需求分析，EPIC 分解与优先级排序 | references/ |
-| **analyze-requirements** | 需求分析全流程编排（自动调度 Agent） | — |
+| **doc-requirements-extractor** | 从 Excel/PDF/PNG/Word/TXT 提取需求 | references/ |
+| **dialog-requirements-refiner** | 多轮对话式需求分析，EPIC 分解与优先级排序 | references/ |
+| **requirements-orchestrator** | 需求分析全流程编排（自动调度 Agent） | — |
 | **testcase-planner** | 需求→测试规划（ITEM/POINT 层级拆解） | `parse_plan.py` |
 | **testcase-generator** | 测试点→结构化测试用例（Markdown/Excel/XMind） | `validate.py`, `to_excel.py`, `testcase_to_xmind.py` |
 | **doc-based-testcase-generator** | 基于 PRD/接口文档直接生成测试用例 | — |
@@ -35,6 +35,10 @@ AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测�
 | **capacity-planning-analysis** | 容量规划与瓶颈分析 | capacity-planning-analysis.md |
 | **mobile-testing** | 移动端功能与兼容性测试 | mobile-testing.md |
 | **security-testing** | 安全扫描与渗透测试流程 | security-testing.md |
+| **performance-test-k6** | k6 性能测试方案与脚本 | prompts/ |
+| **dev-environment-setup** | 开发环境配置与安装 | env_catalog.md, installation-guide.md |
+| **environment-cleanup** | 系统环境整理与磁盘清理 | report-template.html |
+| **darwin-skill** | Skill 自动优化与评分 | run_eval.py |
 
 ## 🔄 完整工作流
 
@@ -49,8 +53,8 @@ AI Agent 驱动的软件测试技能集合，面向 iFlow CLI，覆盖软件测�
 ### 测试技能（核心）
 
 ```
-requirements-analyzer/      testcase-planner/      testcase-generator/
-analyze-requirements/       └── parse_plan.py      ├── validate.py
+doc-requirements-extractor/      testcase-planner/      testcase-generator/
+requirements-orchestrator/       └── parse_plan.py      ├── validate.py
                                                       to_excel.py
                                                       testcase_to_xmind.py
 ```
@@ -115,9 +119,9 @@ python -c "import pandas, openpyxl, docx, playwright; print('All dependencies OK
 
 从各类文档中提取结构化需求：
 
-- **requirements-analyzer**：支持 Excel、PNG、PDF、Word、TXT 格式，输出功能需求、非功能需求、业务规则、依赖关系图
-- **requirements-analysis**：对话式需求细化，支持 EPIC→需求→用户故事分解，MoSCoW/RICE/Kano 优先级排序
-- **analyze-requirements**：全流程编排，自动判断复杂度并调度 Agent
+- **doc-requirements-extractor**：支持 Excel、PNG、PDF、Word、TXT 格式，输出功能需求、非功能需求、业务规则、依赖关系图
+- **dialog-requirements-refiner**：对话式需求细化，支持 EPIC→需求→用户故事分解，MoSCoW/RICE/Kano 优先级排序
+- **requirements-orchestrator**：全流程编排，自动判断复杂度并调度 Agent
 
 ### 2. 测试规划
 
@@ -298,7 +302,7 @@ qa-skills/
 │   ├── SKILL.md
 │   ├── references/             # 认证、命令、性能分析等参考文档
 │   └── templates/              # 认证会话、表单自动化等模板
-├── analyze-requirements/       # 需求分析全流程编排
+├── requirements-orchestrator/       # 需求分析全流程编排
 │   └── SKILL.md
 ├── doc-based-testcase-generator/  # 文档驱动用例生成
 │   └── SKILL.md
@@ -324,10 +328,10 @@ qa-skills/
 │   ├── scripts/
 │   ├── editing.md
 │   └── pptxgenjs.md
-├── requirements-analysis/      # 对话式需求分析
+├── dialog-requirements-refiner/      # 对话式需求分析
 │   ├── SKILL.md
 │   └── references/
-├── requirements-analyzer/      # 文档需求提取
+├── doc-requirements-extractor/      # 文档需求提取
 │   ├── SKILL.md
 │   ├── evals/
 │   └── references/

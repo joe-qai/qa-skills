@@ -149,3 +149,16 @@ description: 基于需求文档、PRD 或接口文档自动生成结构化测试
 
 - **默认行为**：生成的测试用例文档**直接输出在对话中**（Markdown 或纯文本）。用户可自行复制，或口头要求「保存到某路径」后，由执行方使用写入工具保存到指定文件。
 - **保存到本地**：不需要额外脚本。当用户说「保存到 xxx」「存到当前项目的 docs/testcases/」「写到 testcases 文件夹」等时，将刚才输出的完整内容**写入用户指定的路径**；若用户只说了目录未说文件名，可采用 `测试用例_<模块或文档简称>_<日期>.md` 作为默认文件名（日期格式 YYYYMMDD）。
+
+## 八、目录结构说明
+
+```
+doc-based-testcase-generator/
+├── SKILL.md              # 本文件：技能定义与工作流
+├── references/           # 各测试类型的设计标准
+│   ├── api-testcases-standard.md           # 接口测试标准
+│   ├── functional-testcases-standard.md    # 功能测试标准
+│   ├── performance-testcases-standard.md   # 性能测试标准
+│   └── automation-testcases-standard.md    # 自动化候选标准
+└── assets/               # 用户提供的 Word/Excel 模板（按需存放）
+```

@@ -1,5 +1,5 @@
 ---
-name: analyze-requirements
+name: requirements-orchestrator
 description: |
   需求分析全流程编排。根据输入类型自动调度 Agent 获取数据，输出结构化需求报告和开发任务清单。
 
@@ -28,7 +28,7 @@ description: |
   │   - 单表 CRUD，无需看原型图
   │   - 用户已给出完整字段列表
   │
-  └─ 复杂需求？ ──→ Agent 路径（启动 requirements-analyzer）
+  └─ 复杂需求？ ──→ Agent 路径（启动 doc-requirements-extractor）
       - 提供了 Axure 原型截图
       - 提供了云效任务编号
       - 多页面/多模块联动
@@ -52,8 +52,8 @@ description: |
   - 需求描述文字
   - 关联模块信息
 
-步骤 2：启动 requirements-analyzer Agent
-  └── requirements-analyzer(Opus) 内部自动编排：
+步骤 2：启动 doc-requirements-extractor Agent
+  └── doc-requirements-extractor(Opus) 内部自动编排：
       ├── image-reader(Haiku) × N张 → 提取原型图结构（有截图时）
       ├── task-fetcher(Haiku) → 获取云效任务详情（有任务号时）
       └── 汇总分析 → 输出需求报告 + 任务清单
@@ -68,21 +68,21 @@ description: |
 | 用户提供的信息 | 启动方式 |
 |---------------|---------|
 | 只有文字描述 | 快速路径（不启动 Agent） |
-| 文字 + 原型截图 | requirements-analyzer → 内部调 image-reader |
-| 文字 + 云效任务号 | requirements-analyzer → 内部调 task-fetcher |
-| 原型截图 + 云效任务号 | requirements-analyzer → 内部并行调 image-reader + task-fetcher |
+| 文字 + 原型截图 | doc-requirements-extractor → 内部调 image-reader |
+| 文字 + 云效任务号 | doc-requirements-extractor → 内部调 task-fetcher |
+| 原型截图 + 云效任务号 | doc-requirements-extractor → 内部并行调 image-reader + task-fetcher |
 
 ### 启动示例
 
 ```
 # 有原型截图
-Agent(subagent_type="requirements-analyzer",
+Agent(subagent_type="doc-requirements-extractor",
   prompt="分析以下 Axure 原型截图，输出需求分析报告和开发任务清单：
   截图路径：/path/to/image1.png, /path/to/image2.png
   需求描述：xxx")
 
 # 有云效任务
-Agent(subagent_type="requirements-analyzer",
+Agent(subagent_type="doc-requirements-extractor",
   prompt="获取云效任务 SARW-456 的详情，结合以下需求描述分析：xxx")
 ```
 

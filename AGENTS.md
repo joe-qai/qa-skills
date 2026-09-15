@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-AI Agent Testing Skills Collection for iFlow CLI. 32 skills for software testing lifecycle.
+AI Agent Testing Skills Collection for iFlow CLI. 33 skills for software testing lifecycle.
 
 **Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx, pypdf
 
@@ -12,9 +12,9 @@ AI Agent Testing Skills Collection for iFlow CLI. 32 skills for software testing
 
 | Skill | Purpose | Commands/Resources |
 |-------|---------|-------------------|
-| `requirements-analyzer` | Extract requirements from Excel/PDF/PNG/Word/TXT | references/ |
-| `requirements-analysis` | Conversational requirements, EPIC decomposition | references/ |
-| `analyze-requirements` | Full requirements orchestration (Agent dispatch) | — |
+| `doc-requirements-extractor` | Extract requirements from Excel/PDF/PNG/Word/TXT | references/ |
+| `dialog-requirements-refiner` | Conversational requirements, EPIC decomposition | references/ |
+| `requirements-orchestrator` | Full requirements orchestration (Agent dispatch) | — |
 | `testcase-planner` | Test planning (ITEM/POINT hierarchy) | parse_plan.py |
 | `testcase-generator` | Generate test cases (Markdown/Excel/XMind) | validate.py, to_excel.py |
 | `doc-based-testcase-generator` | Generate cases from PRD/interface docs | — |
@@ -41,6 +41,10 @@ AI Agent Testing Skills Collection for iFlow CLI. 32 skills for software testing
 | `capacity-planning-analysis` | 容量规划与瓶颈分析 | capacity-planning-analysis.md |
 | `mobile-testing` | 移动端功能与兼容性测试 | mobile-testing.md, convert_*.py |
 | `security-testing` | 安全扫描与渗透测试流程 | security-testing.md, run-scan.sh |
+| `performance-test-k6` | k6 性能测试方案与脚本 | prompts/ |
+| `dev-environment-setup` | 开发环境配置与安装 | env_catalog.md, installation-guide.md |
+| `environment-cleanup` | 系统环境整理与磁盘清理 | report-template.html |
+| `darwin-skill` | Skill 自动优化与评分 | run_eval.py |
 
 ---
 
@@ -199,14 +203,14 @@ skill-name/
 
 ```
 Requirements → Test Planning → Case Gen → Execution
-(requirements-analyzer) (testcase-planner) (testcase-generator) (webapp-testing)
+(doc-requirements-extractor) (testcase-planner) (testcase-generator) (webapp-testing)
 ```
 
 ### Testing Skills (Core)
 
 ```
-requirements-analyzer/      testcase-planner/      testcase-generator/
-analyze-requirements/       └── parse_plan.py      ├── validate.py
+doc-requirements-extractor/      testcase-planner/      testcase-generator/
+requirements-orchestrator/       └── parse_plan.py      ├── validate.py
                                                       to_excel.py
                                                       testcase_to_xmind.py
 ```

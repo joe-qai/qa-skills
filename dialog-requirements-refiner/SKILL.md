@@ -1,5 +1,5 @@
 ---
-name: "requirements-analysis"
+name: dialog-requirements-refiner
 description: "专业需求分析师，通过多轮对话将简短想法转化为详细需求文档。使用此技能当用户需要：(1) 分析和记录需求，(2) 将 EPIC 分解为需求和用户故事，(3) 对多个需求进行优先级排序，(4) 识别利益相关者和依赖关系，(5) 定义验收标准，(6) 创建需求文档。支持单个需求分析、EPIC 分解、MoSCoW/RICE/Kano 等优先级排序方法。"
 ---
 

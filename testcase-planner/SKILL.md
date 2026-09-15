@@ -148,7 +148,35 @@ allowed-tools: Read, Write, Bash
 
 **为什么错误**：这3个不是独立场景，而是同一场景（用户名密码登录）的不同数据。应该合并为1个 POINT "用户名密码登录"，在用例生成时覆盖密码长度的等价类。
 
-## 6. 检查清单
+## 6. 脚本工具
+
+### parse_plan.py
+
+解析和验证 `plan.md` 文件，提取 ITEM/POINT 结构。
+
+```bash
+# 解析并验证（严格模式，格式错误时报错退出）
+python testcase-planner/scripts/parse_plan.py test-case/plan.md
+
+# 显示详细摘要（ITEM/POINT 列表、风险等级、测试关注点）
+python testcase-planner/scripts/parse_plan.py test-case/plan.md --verbose
+
+# 输出 JSON 格式（便于程序化处理）
+python testcase-planner/scripts/parse_plan.py test-case/plan.md --json
+
+# 非严格模式（仅警告不报错）
+python testcase-planner/scripts/parse_plan.py test-case/plan.md --no-strict
+```
+
+**验证规则**：
+- 缺少一级标题 `# 测试规划` → 错误
+- 无任何 ITEM → 错误
+- 无任何 POINT → 错误
+- ITEM 名称 < 2 字符 → 错误；> 20 字符 → 警告
+- POINT 名称 < 4 字符 → 错误；> 30 字符 → 警告
+- ITEM 下无 POINT → 错误
+
+## 7. 检查清单
 
 - [ ] 所有业务模块都已识别为 ITEM
 - [ ] 所有独立操作路径都已识别为 POINT
@@ -158,3 +186,4 @@ allowed-tools: Read, Write, Bash
 - [ ] 风险等级评估合理
 - [ ] 测试关注点具体明确（有数值、有条件）
 - [ ] 格式符合规范（## ITEM、### POINT、> 备注）
+- [ ] 已通过 `parse_plan.py` 验证格式

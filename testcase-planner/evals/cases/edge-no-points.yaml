@@ -1,0 +1,12 @@
+name: edge-no-points
+description: 需求描述过于笼统时，应识别 ITEM 并给出合理的 POINT 拆分建议
+
+input: |
+  需求：用户管理
+
+expected:
+  must_contain:
+    - "## "
+  assertion: |
+    即使需求笼统，也应输出至少1个 ITEM，并尝试识别合理的 POINT。
+    不应输出空内容或直接拒绝。

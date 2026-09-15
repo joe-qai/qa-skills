@@ -1,0 +1,17 @@
+name: edge-equivalence-class-mistake
+description: 不应将等价类（如同一字段的不同取值范围）误识别为独立 POINT
+
+input: |
+  需求：密码输入框
+  - 密码长度8-20位
+  - 支持字母和数字
+
+expected:
+  must_not_contain:
+    - "密码长度小于8位"
+    - "密码长度8-20位"
+    - "密码长度大于20位"
+  assertion: |
+    密码长度的不同区间是同一场景（用户名密码登录）的等价类，
+    应合并为1个 POINT，在用例生成时覆盖边界值，
+    而非拆成3个独立 POINT。

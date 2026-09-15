@@ -48,7 +48,7 @@ lanhu MCP Server 已注册在Trae CN/User/mcp.json中。首次使用需配置蓝
 
 ## 典型工作流
 
-### 1. 需求分析（与 analyze-requirements 联动）
+### 1. 需求分析（与 requirements-orchestrator 联动）
 
 ```
 收到蓝湖链接
@@ -86,7 +86,7 @@ lanhu_get_designs → 查看设计图列表
 
 | 场景 | 先用 lanhu-design | 再用 |
 |------|-------------------|------|
-| 需求分析 | 获取原型截图和页面结构 | `analyze-requirements` 输出开发任务清单 |
+| 需求分析 | 获取原型截图和页面结构 | `requirements-orchestrator` 输出开发任务清单 |
 | 前端开发 | 获取设计参数和切图 | `ui-pc` 实现页面 |
 | 接口开发 | 从原型推导接口字段 | `api-development` / `crud-development` |
 
@@ -95,4 +95,4 @@ lanhu_get_designs → 查看设计图列表
 - 蓝湖 Cookie 有效期有限，过期需重新获取
 - 原型文档和设计项目使用不同的 URL 格式，工具不能混用
 - 大型原型建议分页面分析，避免单次请求过大
-- 与 `analyze-requirements` 的区别：本技能负责**从蓝湖获取数据**，`analyze-requirements` 负责**分析数据输出任务**
+- 与 `requirements-orchestrator` 的区别：本技能负责**从蓝湖获取数据**，`requirements-orchestrator` 负责**分析数据输出任务**

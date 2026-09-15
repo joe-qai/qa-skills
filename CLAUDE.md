@@ -12,9 +12,9 @@ This is an **AI Agent Testing Skills Collection** (测试技能集合) for iFlow
 
 | Skill | Purpose | Key Scripts/Resources |
 |-------|---------|----------------------|
-| `requirements-analyzer` | Extract requirements from Excel/PDF/PNG/Word/TXT | references/ |
-| `requirements-analysis` | Conversational requirements, EPIC decomposition | references/ |
-| `analyze-requirements` | Full requirements orchestration (Agent dispatch) | — |
+| `doc-requirements-extractor` | Extract requirements from Excel/PDF/PNG/Word/TXT | references/ |
+| `dialog-requirements-refiner` | Conversational requirements, EPIC decomposition | references/ |
+| `requirements-orchestrator` | Full requirements orchestration (Agent dispatch) | — |
 | `testcase-planner` | Test planning (ITEM/POINT hierarchy) | parse_plan.py |
 | `testcase-generator` | Generate test cases (Markdown/Excel/XMind) | validate.py, to_excel.py, testcase_to_xmind.py |
 | `doc-based-testcase-generator` | Generate cases from PRD/interface docs | — |
@@ -157,8 +157,8 @@ Skills use progressive disclosure to manage context:
 |-------|---------|------------|
 | `testcase-generator` | Generate structured test cases from test points | `validate.py`, `to_excel.py`, `testcase_to_xmind.py` |
 | `testcase-planner` | Create test plans (ITEM → POINT hierarchy) | `parse_plan.py` |
-| `requirements-analyzer` | Extract requirements from Excel/PDF/PNG/Word | — |
-| `analyze-requirements` | Orchestrate full requirements analysis workflow | — |
+| `doc-requirements-extractor` | Extract requirements from Excel/PDF/PNG/Word | — |
+| `requirements-orchestrator` | Orchestrate full requirements analysis workflow | — |
 | `agent-browser` | Browser automation via CLI | Uses `npx agent-browser` |
 | `webapp-testing` | Playwright-based web app testing | `with_server.py` |
 | `skill-creator` | Create and evaluate new skills | `run_eval.py`, `aggregate_benchmark.py` |
@@ -194,8 +194,8 @@ Test cases follow a strict Markdown format:
 ```
 1. Requirements → 2. Test Planning → 3. Test Case Gen → 4. Execution → 5. Reporting
 
-requirements-analyzer/      testcase-planner/      testcase-generator/     webapp-testing/
-analyze-requirements/                              scripts/validate.py
+doc-requirements-extractor/      testcase-planner/      testcase-generator/     webapp-testing/
+requirements-orchestrator/                              scripts/validate.py
                                                    scripts/to_excel.py
                                                    scripts/testcase_to_xmind.py
 ```
@@ -203,7 +203,7 @@ analyze-requirements/                              scripts/validate.py
 ### Complete Skill Categories
 
 **Testing Skills (Core)**:
-- requirements-analyzer, requirements-analysis, analyze-requirements
+- doc-requirements-extractor, dialog-requirements-refiner, requirements-orchestrator
 - testcase-planner, testcase-generator, doc-based-testcase-generator
 - test-effort-estimator, webapp-testing
 
