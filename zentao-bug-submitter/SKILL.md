@@ -1,7 +1,7 @@
 # 禅道 Bug 自动提交
 
 通过禅道 REST API v1 自动提交 Bug，支持账号密码登录、动态获取产品/模块/版本/用户选项。
-**注意**：附件上传接口（`POST /api.php/v1/files`）在某些禅道实例中存在服务端问题，如遇到上传失败请记录 uid 并通过禅道 Web 界面手动关联。
+**注意**：附件上传接口（`POST /api.php/v1/files`）在某些禅道实例中存在服务端问题，脚本采用双通道策略（REST → Session Cookie）自动兜底。
 
 ## 连接信息（环境变量）
 
@@ -120,38 +120,54 @@ python scripts/zentao_client.py users --url ... --account ... --password ...
 
 > 如果用户没有提供前置条件，可省略该板块。日志内容可附加在【实际结果】中。
 
-### Step 4: 上传附件（如有）
+**多行内容来源（推荐 `--steps-file`）：**
 
-如果用户提供了截图、视频、日志等文件，尝试上传。脚本按 **REST /files → REST /attachments（objectType/objectID）** 两级策略自动上传并关联。
+当步骤内容来自文件（如 `bug.txt`）且内容较长、含换行时，**优先使用 `--steps-file` 替代 `--steps`**，避免 PowerShell 命令行中多行字符串转义问题：
 
 ```bash
-# 方式一：create-bug 时直接带附件（先 POST /files 上传，再通过 uid 关联到 Bug）
+# 从文件读取步骤（文件含【xxx】标记则原样使用，否则自动包装为【测试步骤】）
 python scripts/zentao_client.py create-bug \
-  --product-id <产品ID> --title "Bug 标题" --severity 3 --pri 3 \
-  --opened-build <版本ID> --steps "..." \
-  --files /path/to/screenshot.png /path/to/run.log \
-  --url "$env:ZENTAO_URL" --account "$env:ZENTAO_ACCOUNT" --password "$env:ZENTAO_PASSWORD"
-
-# 方式二：仅上传附件（纯 REST /files）
-python scripts/zentao_client.py upload \
-  --file /path/to/screenshot.png --uid bug-upload-<timestamp> \
-  --url ... --account ... --password ...
-
-# 方式三：批量上传（多附件，同一 uid 关联）
-python scripts/zentao_client.py upload-files \
-  --files /path/a.png /path/run.log --uid bug-upload-<timestamp> \
-  --url ... --account ... --password ...
+  --product-id <ID> --title "..." --severity 3 --pri 3 \
+  --opened-build <版本> --steps-file /path/to/bug.txt \
+  --url "$env:ZENTAO_URL" --account ... --password ...
 ```
 
-多个文件使用**同一个 uid** 依次上传。
+### Step 4: 上传附件（如有）
 
-**上传策略（`add_or_upload_attachments`）：**
-1. 优先 REST `POST /files`（multipart，field 名 `file`），成功后附件通过 uid 自动关联到 Bug。
-2. 若 `/files` 失败，对失败文件回退到 `POST /attachments`（objectType=bug，objectID=<已创建 Bug 的 id>）上传并直接关联。
-3. 两条 REST 通道均失败时，**不阻断建单**：在创建 Bug 时把附件路径写进 steps，返回结果中带 `_attachments` 字段逐文件标注 `ok/channel/message`，需通过禅道 Web 界面手动关联。
+如果用户提供了截图、视频、日志等文件，尝试上传。脚本采用**双通道**自动兜底：
 
-> **注意**：部分禅道实例的 `/api.php/v1/files` 接口存在服务端问题（返回 `{"error":"error"}`），
-> 此时脚本会回退到 `/attachments` 通道；若 `/attachments` 也失败，请按 `_attachments` 的结果把失败文件的路径告知用户，并在 steps 中保留附件路径。
+| 通道 | 方式 | 适用场景 |
+|------|------|---------|
+| REST `/files` | `POST /api.php/v1/files/create`，multipart，需 `objectType` + `objectID` | ZenTao 20+（API v2 兼容） |
+| Session Cookie | `POST /file-ajaxUpload-{kuid}.html`，通过网页表单上传 | ZenTao 18.x 等旧版本 |
+
+**新建 Bug 后上传附件：**
+
+```bash
+# 先创建 Bug
+python scripts/zentao_client.py create-bug \
+  --product-id <产品ID> --title "Bug 标题" --severity 3 --pri 3 \
+  --opened-build <版本ID> --steps-file /path/to/steps.txt
+
+# 再上传附件（双通道自动兜底）
+python scripts/zentao_client.py upload-files \
+  --object-id <Bug ID> \
+  --files /path/to/screenshot.png /path/to/run.log
+```
+
+**返回结果示例：**
+```json
+{
+  "results": [
+    {
+      "file": "/path/to/screenshot.png",
+      "ok": true,
+      "channel": "rest"
+    }
+  ]
+}
+```
+若 `ok=false`，说明该禅道实例的文件上传功能受限，需在步骤内容中保留附件路径以便后续手动关联。
 
 ### Step 5: 创建 Bug
 
@@ -227,7 +243,7 @@ print(f"Bug #{bug['id']} 创建成功")
 | 严重程度 | `--severity` | 1-5，1最严重 |
 | 优先级 | `--pri` | 1-5，1最高 |
 | Bug 类型 | `--bug-type` | 默认 codeerror，详见参考文档 |
-| 重现步骤 | `--steps` | plain text 格式，见上方步骤3 |
+| 重现步骤 | `--steps` / `--steps-file` | plain text 格式，见上方步骤3；长文本或多行内容推荐用 `--steps-file` 从文件读取 |
 | 附件 | `--files` / `--uid` | 文件路径或已上传的 uid |
 | 操作系统 | `--os` | 如 "Windows 11" |
 | 浏览器 | `--browser` | 如 "Chrome 120" |
@@ -239,6 +255,8 @@ print(f"Bug #{bug['id']} 创建成功")
 1. **连接信息安全**: 禁止在任何文档、代码、回复中硬编码真实的禅道地址、账号、密码。一律通过环境变量 `ZENTAO_URL` / `ZENTAO_ACCOUNT` / `ZENTAO_PASSWORD` 提供；缺失时提醒用户设置。执行命令时不在输出中回显明文密码。
 2. **SSL 证书**: 内网地址如报 SSL 错误，加 `--no-verify` 参数（或设置 `ZENTAO_VERIFY_SSL=0`）。
 3. **必填字段**: 不同禅道后台配置可能有不同的必填字段。如果创建失败，仔细阅读错误信息补充缺失字段。**openedBuild 不可为 0，必须传有效版本 ID**。
-4. **附件上传**: 部分禅道实例的附件上传接口存在服务端问题（返回 `{"error":"error"}`），此时可跳过附件步骤。
+4. **附件上传双通道**: 脚本优先使用 REST `/files`，失败后自动回退到 Session Cookie 网页端点。部分旧版实例（ZenTao 18.x）可能两种通道均受限，此时需在 Bug 步骤中保留附件路径告知用户手动关联。
 5. **Token 过期**: 脚本每次操作前自动检查登录状态，token 过期会自动重新登录。
 6. **版本查询**: builds 接口在某些禅道实例中需要通过 `--project-id` 而非 `--product-id` 查询。
+7. **多行步骤内容**: 步骤内容来自文件（如 bug.txt）时，优先使用 `--steps-file` 参数。PowerShell 命令行中直接传递多行字符串会有转义问题。
+8. **附件覆盖**: 对已有 Bug 追加或更新附件，使用 `upload-files --object-id <BugID> --files ...`，脚本自动执行双通道上传策略。

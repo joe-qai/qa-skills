@@ -6,6 +6,24 @@
       "sourceType": "github",
       "skillPath": "skills/browser-use/SKILL.md",
       "computedHash": "f511ca0e2210744371486c5397f5f6bdd63a46e4b48502484712e5b679ad6461"
+    },
+    "release": {
+      "source": "easysoft/zentao-cli",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/release/SKILL.md",
+      "computedHash": "1c3359800cae72a78619659acda5f441be226adf44342a6bc47b7fa3128956c6"
+    },
+    "zentao-cli": {
+      "source": "easysoft/zentao-cli",
+      "sourceType": "github",
+      "skillPath": "skills/zentao-cli/SKILL.md",
+      "computedHash": "8fe6d3e26b8d3911689975109bb78eb2f661e36d8af0281db8bc8334c0ed6e13"
+    },
+    "zentao-tour": {
+      "source": "easysoft/zentao-cli",
+      "sourceType": "github",
+      "skillPath": "skills/zentao-tour/SKILL.md",
+      "computedHash": "e3c6c41c4bc4ca7722c2bf918a5866fab73dd455c22e19aec9727cc7e36551f4"
     }
   }
 }

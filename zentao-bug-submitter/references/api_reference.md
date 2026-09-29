@@ -186,7 +186,7 @@ POST /bugs
 | `pri` | int | **是** | 优先级 1-5（1最高） |
 | `type` | string | **是** | Bug 类型，见[枚举值](#bug-类型) |
 | `openedBuild` | array | **是** | 影响版本 ID 列表，如 `[3]`；支持字符串版本名（如 `["APP_601_28"]`、`["601_28"]`）。若输入模糊，脚本会自动从已有 Bug 中模糊匹配最接近的版本名。传入 `execution` 可确保版本名正确解析。 |
-| `steps` | string | **是** | 重现步骤（plain text 格式） |
+| `steps` | string | **是** | 重现步骤（plain text 格式）。`--steps` 和 `--steps-file` 二选一；`--steps-file` 读取文件内容，含【xxx】标记则原样使用，否则包装为 `【测试步骤】\n<内容>` |
 | `module` | int | 否 | 所属模块 ID |
 | `assignedTo` | string | 否 | 当前指派（用户 account） |
 | `project` | int | 否 | 所属项目 ID |
